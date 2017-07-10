@@ -66,7 +66,7 @@ const Button = (props) => {
             </button>
         </div>
     );
-}
+};
 
 const Answer = (props) => {
     return (
@@ -78,7 +78,7 @@ const Answer = (props) => {
             )}
         </div>
     );
-}
+};
 
 const Numbers = (props) => {
     const numberClassName = (number) => {
@@ -88,7 +88,7 @@ const Numbers = (props) => {
         if(props.selectedNumbers.indexOf(number) >=0) {
             return 'selected';
         }
-    }
+    };
 
     return(
         <div className="card text-center">
@@ -101,8 +101,8 @@ const Numbers = (props) => {
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 Numbers.list = _.range(1,10);
 
@@ -158,12 +158,14 @@ class Game extends Component {
     }
 
     render(){
-        const { selectedNumbers,
-                randomNumberOfStars,
-                answerIsCorrect,
-                usedNumbers,
-                redraws,
-            } = this.state;
+        const { 
+            selectedNumbers,
+            randomNumberOfStars,
+            answerIsCorrect,
+            usedNumbers,
+            redraws,
+        } = this.state;
+        
         return(
             <div className="container">
                 <h3>Play Nine</h3>
@@ -173,6 +175,7 @@ class Game extends Component {
                     <Button selectedNumbers = {selectedNumbers}
                             checkAnswer = {this.checkAnswer}
                             acceptAnswer = {this.acceptAnswer}
+                            redraw = {this.redraw}
                             redraws = {redraws}
                             answerIsCorrect = {answerIsCorrect} />
                     <Answer selectedNumbers={selectedNumbers} 

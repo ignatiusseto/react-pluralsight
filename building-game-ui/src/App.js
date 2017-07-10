@@ -57,8 +57,13 @@ const Button = (props) => {
     }
 
     return (
-        <div className="col-2">
+        <div className="col-2 text-center">
             {button}
+            <br /><br />
+            <button className="btn btn-warning btn-sm" onClick={props.redraw}
+                    disabled={props.redraws === 0}>
+                <i className="fa fa-refresh"></i> {props.redraws}
+            </button>
         </div>
     );
 }
@@ -107,6 +112,7 @@ class Game extends Component {
         randomNumberOfStars: 1 + Math.floor(Math.random()*9),
         usedNumbers: [],
         answerIsCorrect: null,
+        redraws: 5,
     };
 
     selectNumber = (clickedNumber) => {
@@ -141,11 +147,22 @@ class Game extends Component {
         }));
     };
 
+    redraw = () => {
+        if(this.state.redraws === 0) {return;}
+        this.setState(prevState => ({
+            randomNumberOfStars: 1 + Math.floor(Math.random()*9),
+            answerIsCorrect: null,
+            selectedNumbers: [],
+            redraws: prevState.redraws - 1,
+        }));
+    }
+
     render(){
         const { selectedNumbers,
                 randomNumberOfStars,
                 answerIsCorrect,
-                usedNumbers
+                usedNumbers,
+                redraws,
             } = this.state;
         return(
             <div className="container">
@@ -156,6 +173,7 @@ class Game extends Component {
                     <Button selectedNumbers = {selectedNumbers}
                             checkAnswer = {this.checkAnswer}
                             acceptAnswer = {this.acceptAnswer}
+                            redraws = {redraws}
                             answerIsCorrect = {answerIsCorrect} />
                     <Answer selectedNumbers={selectedNumbers} 
                             unselectNumber={this.unselectNumber}/>

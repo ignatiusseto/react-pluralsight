@@ -4,27 +4,18 @@ import axios from 'axios';
 
 class App extends Component {
     state = {
-        cards: [
-            {   
-                name: "Ignatius Seto",
-                avatar_url: "https://avatars3.githubusercontent.com/u/17163682?v=3",
-                company: "Accenture" 
-            },
-            {
-                name: "Philippe Dijon",
-                avatar_url: "https://avatars3.githubusercontent.com/u/19623192?v=3",
-                company: "Accenture"
-            },
-        ]
+        cards: []
     }
 
     addNewCard = (cardInfo) => {
-        console.log(cardInfo);
+        this.setState(prevState => ({
+            cards: prevState.cards.concat(cardInfo)
+        }));
     }
     render(){
         return(
             <div>
-                <Form />
+                <Form onSubmit={this.addNewCard}/>
                 <CardList cards={this.state.cards}/>
             </div>
         )
@@ -47,31 +38,32 @@ const Card = (props) => {
 const CardList = (props) => {
     return(
         <div>
-            {props.cards.map(card => <Card {...card}/>)}
+            {props.cards.map(card => <Card key={card.id} {...card}/>)}
         </div>
     )
 }
 
 // A form to handle user search input
 class Form extends Component {
-    state = { userName : '' }
+    state = { userName: '' }
     handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Event: form submit', this.state.userName);
-        axios.get('https://www.github.com/users/${this.state.userName}')
+        console.log(this.state.userName);
+        axios.get(`https://api.github.com/users/${this.state.userName}`)
             .then(resp => {
-                console.log(resp);
+                this.props.onSubmit(resp.data);
+                this.setState({userName: ''});
             });
-    }
+    };
     render(){
         return(
+            /* alternative to using ref is 'state'*/
+            /* ref={(input) => this.userNameInput = input}*/
             <form onSubmit={this.handleSubmit}>
                 <input type="text"
-                /*alternative to using ref is 'state'*/
-                /*ref={(input) => this.userNameInput = input}*/
                 value={this.state.userName}
                 onChange = {(event) => this.setState({ userName: event.target.value })}
-                placeholder="Github username" />
+                placeholder="Github username" required/>
                 <button type="submit">Add card</button>
             </form>
         )
